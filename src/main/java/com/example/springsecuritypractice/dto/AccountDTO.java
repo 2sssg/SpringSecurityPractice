@@ -3,6 +3,7 @@ package com.example.springsecuritypractice.dto;
 import com.example.springsecuritypractice.account.Account;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter
@@ -16,8 +17,8 @@ public class AccountDTO {
 
 	private String role;
 
-	public void encodePassword(String s) {
-		this.password = "{" + s + "}" + this.password;
+	public void encodePassword(PasswordEncoder passwordEncoder) {
+		this.password = passwordEncoder.encode(this.password);
 	}
 
 	public Account toEntity() {
