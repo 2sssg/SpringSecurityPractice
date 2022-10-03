@@ -1,12 +1,18 @@
 package com.example.springsecuritypractice.dto;
 
 import com.example.springsecuritypractice.account.Account;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountDTO {
 
 	private Integer id;
@@ -17,8 +23,9 @@ public class AccountDTO {
 
 	private String role;
 
-	public void encodePassword(PasswordEncoder passwordEncoder) {
+	public AccountDTO encodePassword(PasswordEncoder passwordEncoder) {
 		this.password = passwordEncoder.encode(this.password);
+		return this;
 	}
 
 	public Account toEntity() {

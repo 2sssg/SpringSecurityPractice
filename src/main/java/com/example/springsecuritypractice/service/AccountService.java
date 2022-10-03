@@ -35,8 +35,21 @@ public class AccountService implements UserDetailsService {
 	}
 
 	public Account createAccount(AccountDTO accountDTO) {
-		accountDTO.encodePassword(passwordEncoder);
 
-		return (accountRepository.save(accountDTO.toEntity()));
+		return (accountRepository.save(accountDTO
+				.encodePassword(passwordEncoder)
+				.toEntity()));
+	}
+
+	public Account createAccount(Account account) {
+
+		return (accountRepository.save(AccountDTO.builder()
+				.id(account.getId())
+				.username(account.getUsername())
+				.password(account.getPassword())
+				.role(account.getRole())
+				.build()
+				.encodePassword(passwordEncoder)
+				.toEntity()));
 	}
 }
