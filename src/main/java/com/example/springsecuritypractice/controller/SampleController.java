@@ -1,4 +1,4 @@
-package com.example.springsecuritypractice;
+package com.example.springsecuritypractice.controller;
 
 import java.security.Principal;
 import org.springframework.stereotype.Controller;

@@ -19,7 +19,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
 		httpSecurity.authorizeHttpRequests()
-				.mvcMatchers("/", "/info").permitAll()
+				.mvcMatchers("/", "/info", "/account/**").permitAll()
 				.mvcMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().authenticated()
 				.and().formLogin()
@@ -40,20 +40,26 @@ public class SecurityConfig {
 //				.withUser("admin").password("{noop}!@#").roles("ADMIN");
 //	}
 
-	@Bean
-	public InMemoryUserDetailsManager userDetailsService() {
-		List<UserDetails> userDetailsList = new ArrayList<>();
-		userDetailsList.add(User.builder()
-				.username("seokjin")
-				.password("{noop}123")
-				.roles("USER")
-				.build());
-		userDetailsList.add(User.builder()
-				.username("admin")
-				.password("{noop}!@#")
-				.roles("ADMIN")
-				.build());
+	//바뀐 방식
+//	@Bean
+//	public InMemoryUserDetailsManager userDetailsService() {
+//		List<UserDetails> userDetailsList = new ArrayList<>();
+//		userDetailsList.add(User.builder()
+//				.username("seokjin")
+//				.password("{noop}123")
+//				.roles("USER")
+//				.build());
+//		userDetailsList.add(User.builder()
+//				.username("admin")
+//				.password("{noop}!@#")
+//				.roles("ADMIN")
+//				.build());
+//
+//		return (new InMemoryUserDetailsManager(userDetailsList));
+//	}
 
-		return (new InMemoryUserDetailsManager(userDetailsList));
-	}
+
+	// 데이터베이스 사용해서 사용자 정보 등록
+
+
 }
