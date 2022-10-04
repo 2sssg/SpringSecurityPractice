@@ -1,5 +1,7 @@
 package com.example.springsecuritypractice.controller;
 
+import com.example.springsecuritypractice.context.AccountContext;
+import com.example.springsecuritypractice.repository.AccountRepository;
 import com.example.springsecuritypractice.service.SampleService;
 import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SampleController {
 
 	@Autowired SampleService sampleService;
+
+	@Autowired AccountRepository accountRepository;
 
 	@GetMapping("/")
 	public String index(Model model, Principal principal) {
@@ -32,8 +36,10 @@ public class SampleController {
 
 	@GetMapping("/dashboard")
 	public String dashboard(Model model, Principal principal) {
-		sampleService.dashboard();
 		model.addAttribute("message", "Hi, " + principal.getName());
+		// 직접 넣어주지 않아도 스프링 시큐리티가 알아서 넣어준다.
+		AccountContext.setAccount(accountRepository.findByUsername(principal.getName()));
+		sampleService.dashboard();
 
 		return ("dashboard");
 	}
