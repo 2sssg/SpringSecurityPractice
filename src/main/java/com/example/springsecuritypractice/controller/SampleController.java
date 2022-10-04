@@ -1,6 +1,5 @@
 package com.example.springsecuritypractice.controller;
 
-import com.example.springsecuritypractice.context.AccountContext;
 import com.example.springsecuritypractice.repository.AccountRepository;
 import com.example.springsecuritypractice.service.SampleService;
 import java.security.Principal;
@@ -38,7 +37,7 @@ public class SampleController {
 	public String dashboard(Model model, Principal principal) {
 		model.addAttribute("message", "Hi, " + principal.getName());
 		// 직접 넣어주지 않아도 스프링 시큐리티가 알아서 넣어준다.
-		AccountContext.setAccount(accountRepository.findByUsername(principal.getName()));
+//		AccountContext.setAccount(accountRepository.findByUsername(principal.getName()));
 		sampleService.dashboard();
 
 		return ("dashboard");
