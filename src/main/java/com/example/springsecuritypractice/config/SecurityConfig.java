@@ -1,33 +1,64 @@
 package com.example.springsecuritypractice.config;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
+
+
+	//	/**
+//	 *	Filter 연습
+//	 *	여기는 전부다 허용
+//	 *	AnotherSecurityConfig와 반대되는 모습
+//	 */
+//	@Bean
+//	//우선순위가 더 낮다 (AnotherSecurityConfig보다)
+//	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+//		httpSecurity.authorizeRequests()
+//				.anyRequest().permitAll()
+//				.and().formLogin()
+//				.and().httpBasic();
+//
+//		return (httpSecurity.build());
+//	}
+//
+
+	public AccessDecisionManager accessDecisionManager() {
+		RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+		roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+
+		DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+		handler.setRoleHierarchy(roleHierarchy);
+
+		WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
+		webExpressionVoter.setExpressionHandler(handler);
+
+		List<AccessDecisionVoter<?>> voters = List.of(webExpressionVoter);
+		return (new AffirmativeBased(voters));
+	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-		httpSecurity.authorizeHttpRequests()
+		// chaining을 사용하지 않고 따로 명세해주어도 상관없다.
+		httpSecurity.authorizeRequests()
 				.mvcMatchers("/", "/info", "/account/**").permitAll()
 				.mvcMatchers("/admin").hasRole("ADMIN")
+				.mvcMatchers("/user").hasRole("USER")
 				.anyRequest().authenticated()
+				.accessDecisionManager(accessDecisionManager())
 				.and().formLogin()
 				.and().httpBasic();
 
-		// chaining을 사용하지 않고 따로 명세해주어도 상관없다.
-//		httpSecurity.formLogin();
-//		httpSecurity.httpBasic();
 		return (httpSecurity.build());
 	}
 
