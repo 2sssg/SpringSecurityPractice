@@ -1,6 +1,7 @@
 package com.example.springsecuritypractice.config;
 
 import java.util.List;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -8,11 +9,15 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
 
@@ -48,6 +53,14 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+//		return web -> web.ignoring().mvcMatchers("무시할 path");
+		return (web -> web
+				.ignoring()
+				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
+	}
+
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
 		// chaining을 사용하지 않고 따로 명세해주어도 상관없다.
 		httpSecurity.authorizeRequests()
@@ -59,8 +72,14 @@ public class SecurityConfig {
 				.and().formLogin()
 				.and().httpBasic();
 
+		//스레드에서 생성하는 하위스레드에서는 공유가 되게!
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+
 		return (httpSecurity.build());
 	}
+
+
+
 
 	//기존 방식
 //	@Override

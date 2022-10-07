@@ -1,12 +1,15 @@
 package com.example.springsecuritypractice.controller;
 
+import com.example.springsecuritypractice.common.SecurityLogger;
 import com.example.springsecuritypractice.repository.AccountRepository;
 import com.example.springsecuritypractice.service.SampleService;
 import java.security.Principal;
+import java.util.concurrent.Callable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class SampleController {
@@ -54,4 +57,25 @@ public class SampleController {
 		model.addAttribute("message", "Hello user, " + principal.getName());
 		return ("user");
 	}
+
+	@GetMapping("/async-handler")
+	@ResponseBody
+	public Callable<String> asyncHandler() {
+		SecurityLogger.log("MVC");
+		return () -> {
+			SecurityLogger.log("callable");
+			return ("Async Handler");
+		};
+	}
+
+	@GetMapping("/async-service")
+	@ResponseBody
+	public String asyncService() {
+		SecurityLogger.log("MVC, before async service");
+		sampleService.asyncService();
+		SecurityLogger.log("MVC, after async service");
+
+		return ("Async Service");
+	}
+
 }
