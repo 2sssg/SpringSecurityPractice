@@ -72,6 +72,16 @@ public class SecurityConfig {
 				.and().formLogin()
 				.and().httpBasic();
 
+		httpSecurity.logout()
+				.logoutUrl("/logout") // 우리가 사용할 로그아웃 페이지
+				.logoutSuccessUrl("/") // 로그아웃이 성공하면 redirect할 페이지
+//				.addLogoutHandler() // 부가적인 작업을 위해 핸들러를 추가할 수 있다
+//				.logoutSuccessHandler() // 성공했을 때 실행될 핸들러
+				.invalidateHttpSession(true) // 디폴트가 true, 보통 커스터마이징 하지 않는다
+//				.deleteCookies() // 쿠키기반의 로그인을 구현하고 있다 라고하면 여기에 쿠키이름을 주면 된다
+				;
+
+
 		//스레드에서 생성하는 하위스레드에서는 공유가 되게!
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 
