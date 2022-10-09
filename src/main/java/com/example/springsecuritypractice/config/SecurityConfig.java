@@ -64,7 +64,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
 		// chaining을 사용하지 않고 따로 명세해주어도 상관없다.
 		httpSecurity.authorizeRequests()
-				.mvcMatchers("/", "/info", "/account/**").permitAll()
+				.mvcMatchers("/", "/info", "/account/**", "/signup").permitAll()
 				.mvcMatchers("/admin").hasRole("ADMIN")
 				.mvcMatchers("/user").hasRole("USER")
 				.anyRequest().authenticated()
