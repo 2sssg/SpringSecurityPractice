@@ -1,5 +1,6 @@
 package com.example.springsecuritypractice.config;
 
+import com.example.springsecuritypractice.handler.AdminAccessDeniedHandler;
 import java.util.List;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -87,6 +88,17 @@ public class SecurityConfig {
 //				.deleteCookies() // 쿠키기반의 로그인을 구현하고 있다 라고하면 여기에 쿠키이름을 주면 된다
 				;
 		httpSecurity.httpBasic();
+
+		// TODO ExceptionTranslatorFiler -> FilterSecurityInterceptor (AccessDecisionManager, AffirmativeBase)
+		// TODO AuthenticationException -> 인증이 안되어있다 -> AuthenticationEntryPoint (해당 유저가 인증이 가능한 페이지로)
+		// TODO AccessDeniedException -> 인가가 안되어있다 -> AccessDeniedHandler(기본 처리는 403)
+
+		httpSecurity.exceptionHandling()
+				.accessDeniedHandler(new AdminAccessDeniedHandler());
+//				.accessDeniedPage("/access-denied");
+
+//		httpSecurity.anonymous()
+//				.principal("anonymousUser"); // 디폴트
 
 
 		//스레드에서 생성하는 하위스레드에서는 공유가 되게!
