@@ -68,9 +68,15 @@ public class SecurityConfig {
 				.mvcMatchers("/admin").hasRole("ADMIN")
 				.mvcMatchers("/user").hasRole("USER")
 				.anyRequest().authenticated()
-				.accessDecisionManager(accessDecisionManager())
-				.and().formLogin()
-				.and().httpBasic();
+				.accessDecisionManager(accessDecisionManager());
+
+		//logingPage
+		//DefaultloginPageGenerateFilter등록이 안되고
+		// logout도 없어진다..
+		// 이 loginPage를 쓰는 순간 커스터마이징한것을 쓴다고 판단하기 때문
+		httpSecurity.formLogin()
+				.loginPage("/login")
+				.permitAll();
 
 		httpSecurity.logout()
 				.logoutUrl("/logout") // 우리가 사용할 로그아웃 페이지
@@ -80,6 +86,7 @@ public class SecurityConfig {
 				.invalidateHttpSession(true) // 디폴트가 true, 보통 커스터마이징 하지 않는다
 //				.deleteCookies() // 쿠키기반의 로그인을 구현하고 있다 라고하면 여기에 쿠키이름을 주면 된다
 				;
+		httpSecurity.httpBasic();
 
 
 		//스레드에서 생성하는 하위스레드에서는 공유가 되게!
