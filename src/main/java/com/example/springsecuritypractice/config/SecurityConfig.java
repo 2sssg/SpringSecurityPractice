@@ -1,7 +1,9 @@
 package com.example.springsecuritypractice.config;
 
 import com.example.springsecuritypractice.handler.AdminAccessDeniedHandler;
+import com.example.springsecuritypractice.service.AccountService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,8 @@ import org.springframework.security.web.access.expression.WebExpressionVoter;
 public class SecurityConfig {
 
 
+	@Autowired
+	AccountService accountService;
 	//	/**
 //	 *	Filter 연습
 //	 *	여기는 전부다 허용
@@ -100,6 +104,9 @@ public class SecurityConfig {
 //		httpSecurity.anonymous()
 //				.principal("anonymousUser"); // 디폴트
 
+		httpSecurity.rememberMe()
+				.userDetailsService(accountService)
+						.key("remember-me");
 
 		//스레드에서 생성하는 하위스레드에서는 공유가 되게!
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
