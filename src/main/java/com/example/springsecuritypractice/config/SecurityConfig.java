@@ -1,5 +1,6 @@
 package com.example.springsecuritypractice.config;
 
+import com.example.springsecuritypractice.common.LoggingFilter;
 import com.example.springsecuritypractice.handler.AdminAccessDeniedHandler;
 import com.example.springsecuritypractice.service.AccountService;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -67,6 +69,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+		httpSecurity.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class);
 		// chaining을 사용하지 않고 따로 명세해주어도 상관없다.
 		httpSecurity.authorizeRequests()
 				.mvcMatchers("/", "/info", "/account/**", "/signup").permitAll()
