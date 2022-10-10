@@ -2,6 +2,7 @@ package com.example.springsecuritypractice.service;
 
 import com.example.springsecuritypractice.common.SecurityLogger;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class SampleService {
 
+	//이 두 어노테이션은 메서드 호출 이전에 검사를한다
+	// 그리고 Spring EL을 사용하지 못한다
+	@Secured("ROLE_USER")
+//	@RolesAllowed("ROLE_USER")
+
+	// 얘 역시 메서드 호출 이전에 검사를하지만 Spring EL 사용가능
+//	@PreAuthorize("hasRole('USER')")
+
+	//얘는 메서드 호출이후에 추가적인 인가를 할 수 있다
+//	@PostAuthorize("hasRole('USER')")
 	public void dashboard() {
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //		Object principal = authentication.getPrincipal();
