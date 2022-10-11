@@ -1,5 +1,7 @@
 package com.example.springsecuritypractice.controller;
 
+import com.example.springsecuritypractice.account.Account;
+import com.example.springsecuritypractice.common.CurrentUser;
 import com.example.springsecuritypractice.common.SecurityLogger;
 import com.example.springsecuritypractice.repository.AccountRepository;
 import com.example.springsecuritypractice.service.SampleService;
@@ -19,11 +21,12 @@ public class SampleController {
 	@Autowired AccountRepository accountRepository;
 
 	@GetMapping("/")
-	public String index(Model model, Principal principal) {
-		if (principal == null) {
+	public String index(Model model, @CurrentUser Account account) {
+		if (account == null) {
 			model.addAttribute("message", "Hello, Spring Security");
 		} else {
-			model.addAttribute("message", "Welcome back, " + principal.getName());
+			model.addAttribute("message",
+					"Welcome back, " + account.getUsername());
 		}
 
 		return ("index");
@@ -48,13 +51,15 @@ public class SampleController {
 
 	@GetMapping("/admin")
 	public String admin(Model model, Principal principal) {
-		model.addAttribute("message", "Hello Admin, " + principal.getName());
+		model.addAttribute("message",
+				"Hello Admin, " + principal.getName());
 		return ("admin");
 	}
 
 	@GetMapping("/user")
 	public String user(Model model, Principal principal) {
-		model.addAttribute("message", "Hello user, " + principal.getName());
+		model.addAttribute("message",
+				"Hello user, " + principal.getName());
 		return ("user");
 	}
 
