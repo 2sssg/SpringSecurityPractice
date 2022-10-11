@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SpringSecurityPracticeApplication {
 
 	public static void main(String[] args) {
+		System.out.println("========================================");
 		SpringApplication.run(SpringSecurityPracticeApplication.class, args);
+		System.out.println("========================================2");
 	}
 
 	@Bean

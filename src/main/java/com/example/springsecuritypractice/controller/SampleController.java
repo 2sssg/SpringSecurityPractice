@@ -1,6 +1,7 @@
 package com.example.springsecuritypractice.controller;
 
 import com.example.springsecuritypractice.account.Account;
+import com.example.springsecuritypractice.book.BookRepository;
 import com.example.springsecuritypractice.common.CurrentUser;
 import com.example.springsecuritypractice.common.SecurityLogger;
 import com.example.springsecuritypractice.repository.AccountRepository;
@@ -19,6 +20,8 @@ public class SampleController {
 	@Autowired SampleService sampleService;
 
 	@Autowired AccountRepository accountRepository;
+
+	@Autowired BookRepository bookRepository;
 
 	@GetMapping("/")
 	public String index(Model model, @CurrentUser Account account) {
@@ -60,6 +63,8 @@ public class SampleController {
 	public String user(Model model, Principal principal) {
 		model.addAttribute("message",
 				"Hello user, " + principal.getName());
+		model.addAttribute("books",
+				bookRepository.findCurrentBooks());
 		return ("user");
 	}
 
